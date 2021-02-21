@@ -18,6 +18,7 @@ app.listen(PORT,()=>{
 // routes -endpoints
 
 app.get('/location',handleLocation);
+
 // app.get('/weather',handleWeather);
 
 
@@ -62,3 +63,67 @@ function CityLocation(searchQuery,displayName,lat,lon){
     this.longitude=lon;
 
 }
+
+/// Weather ===============================
+
+app.get('/weather',handleWeather);
+
+function handleWeather(req, res){
+    
+    let weatherObjects= getWeatherData();
+
+    res.status(200).send(weatherObjects);
+}
+
+
+function getWeatherData(){
+    let weather=require('./data/weather.json');
+    let weatherArray=[];
+    let timeArray = weather.data
+    for (let i = 0; i < timeArray.length; i++) {
+        let forcast= timeArray[i].weather.description;
+        let time = timeArray[i].datetime;
+        let x = turnDate(time);
+
+        let weatherObject= new Weather(forcast,x);
+        weatherArray.push(weatherObject);
+    }
+    return weatherArray;
+
+
+}
+
+
+
+// let items = value.slice(value.indexOf(' ')+1, value.length);
+// list.push(items.slice(items.indexOf(" ")+1, items.length));
+
+function turnDate(day){
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December']; 
+
+    const days = [ 'Sun', 'Mon','Tue','Wed','Thu','Fri','Sat'];
+    
+    const d = new Date(day);
+    const year = d.getFullYear() ;
+    const date = d.getDate() ;
+
+    const monthName = months[d.getMonth()];
+    console.log(monthName);
+
+    const dayName = days[d.getDay()];
+
+    const formatted = `${dayName}, ${date} ${monthName} ${year}`;
+    console.log(formatted);
+    return formatted;
+
+}
+
+
+function Weather(forcast,time){
+    this.forecast=forcast;
+    this.time=time;
+
+
+}
+
+
