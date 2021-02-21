@@ -14,13 +14,13 @@ its a sever to get information on a city (location and weather) as the clint ask
 he should provide the programme with the name of the city and click explore
 
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+
+I used JS in coding ,Node js libraries and I installed all the packages I needed  
 
 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
 
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
+3:32 PM 21-2-2021 I implemented the location for the application 
 
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
