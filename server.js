@@ -95,9 +95,6 @@ function getWeatherData(){
 
 
 
-// let items = value.slice(value.indexOf(' ')+1, value.length);
-// list.push(items.slice(items.indexOf(" ")+1, items.length));
-
 function turnDate(day){
     const months = ['January','February','March','April','May','June','July','August','September','October','November','December']; 
 
