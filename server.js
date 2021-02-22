@@ -179,7 +179,7 @@ function handlePark(req, res){
 
 
 function getParkData(req,res){
-    console.log(req.query);
+    // console.log(req.query);
     let url='https://developer.nps.gov/api/v1/parks';
 
     const query={
@@ -189,16 +189,14 @@ function getParkData(req,res){
 
     return superagent.get(url).query(query).then(data=>{
         try{
-            console.log(data.body.data);
-            console.log('=================');
-            console.log(data.body.data[0].addresses);
+            console.log(data.body.data[0].entranceFees[0].cost);
             
             let parksArray=[]; 
             data.body.data.map((value)=>{
             let name=value.fullName;
             let parkURL=value.url;
             let desscreption=value.description;
-            let fee='0.00';
+            let fee=value.entranceFees[0].cost;
             let address=`"${value.addresses[0].line1}"  "${value.addresses[0].city}" "${value.addresses[0].stateCode}" "${value.addresses[0].postalCode}"`
             
             //first location 
