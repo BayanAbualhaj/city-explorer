@@ -61,3 +61,50 @@ Start time: 3:30
 Finish time: 4:40
 
 Actual time needed to complete:1 hour and 10 mins
+
+
+
+<!-- ====================================lab07================================== -->
+
+Number and name of feature: locations
+
+Estimate of time needed to complete: 1 hour and 30 min
+
+Start time: 3:15
+
+Finish time: 4:20
+
+Actual time needed to complete: 1:05 hour
+
+<!-- ================================ -->
+Number and name of feature: weatyer
+
+Estimate of time needed to complete: 1 hour and 30
+
+Start time: 4:35
+
+Finish time: 5:00
+
+Actual time needed to complete: 25 min
+<!-- ===================================-->
+
+Number and name of feature: parks
+
+Estimate of time needed to complete: 1 hour and 30 min
+
+Start time: 8:39
+
+Finish time: 9:30
+
+Actual time needed to complete: 51min
+
+<!-- =================================== -->
+Number and name of feature: maps
+
+Estimate of time needed to complete: 30min
+
+Start time: 2:45
+
+Finish time: 3:15
+
+Actual time needed to complete: 30min 
