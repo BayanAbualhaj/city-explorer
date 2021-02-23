@@ -4,11 +4,14 @@ let express= require('express');
 const cors = require('cors');
 let superagent = require('superagent');
 
+
 let app= express();
 app.use(cors());
-
+const pg=require('pg');
 //// this line is to order to use it every where 
 require('dotenv').config();
+
+const client= new pg.Client(process.env.DATABASE_URL);
 
 const PORT =process.env.PORT;
 
@@ -37,14 +40,15 @@ function handleLocation(req,res){
     // console.log(searchQuery);
     // I'm passing here the searchQuery to send the requst to the get location then in order to git the data we will make the response 
     // the new formula that taking the data as a parameter there is no need to make a variable and setting it into it.
-    getLocationData(searchQuery).then(data=>{
-        res.status(200).send(data);
-    });
+    checkDataBase(searchQuery, res);
+    // getLocationData(searchQuery,res).then(data=>{
+    //     res.status(200).send(data);
+    // });
 }
 
 // ========================get data ============================
 
-function getLocationData(searchQuery){
+function getLocationData(searchQuery,res){
     const query ={
         key: process.env.GEOCODE_API_KEY,
         q: searchQuery,
@@ -54,20 +58,52 @@ function getLocationData(searchQuery){
 
     let url ='https://eu1.locationiq.com/v1/search.php';
     return superagent.get(url).query(query).then(data=>{
+        console.log(data.body);
         try{
             let longitude=data.body[0].lon;
             let latitude=data.body[0].lat;
-            let name=data.body[0].display_name
-            let resObject= new CityLocation(searchQuery,name,latitude,longitude);
-            return resObject;
+            let name=searchQuery;
+            let formatName=data.body[0].display_name;
+
+            let dbQuery =`INSERT INTO cities(cityName,formatName,lon,lat) VALUES ($1,$2,$3,$4)`;
+            console.log(longitude);
+            console.log(latitude);
+            console.log(name);
+            console.log(formatName);
+            let safeValues=[name,formatName,longitude,latitude];
+
+            client.query(dbQuery,safeValues).then(data=>{
+                console.log(data);
+                let resObject= new CityLocation(searchQuery,name,latitude,longitude);
+                console.log(resObject)
+                return resObject;
+                ;
+            });
         }catch(error){
             res.status(500).send('Status :500 , Sorry, something went wrong');
         }
     }).catch(error=>{
-        res.status(500).send(`Status :500 , Sorry, something went wrong  + ${error}`);   
+        res.status(500).send(`Status :500 , Sorry, something acourrced  + ${error}`);   
     });
 }
 
+//==================Function check database==========
+
+function checkDataBase(searchQuery,res){
+    client.query(`SELECT * FROM cities WHERE cityName='${searchQuery}'`).then(data=>{
+        if (data.rows.length==0){
+            getLocationData(searchQuery,res).then(data=>{
+                res.status(200).send(data);
+            });
+        }else {
+            console.log(data.rows);
+            let resObject= new CityLocation(data.rows[0].cityname,data.rows[0].formatname,data.rows[0].lat,data.rows[0].lon);
+            console.log('else ',resObject);
+            res.status(200).send(resObject);
+        }
+    });
+    
+}
 
 //=================Constructor========================
 // constructor to order the data 
@@ -189,7 +225,7 @@ function getParkData(req,res){
 
     return superagent.get(url).query(query).then(data=>{
         try{
-            console.log(data.body.data[0].entranceFees[0].cost);
+            // console.log(data.body.data[0].entranceFees[0].cost);
             
             let parksArray=[]; 
             data.body.data.map((value)=>{
@@ -230,7 +266,12 @@ function Parks(name,address,fee,description,url){
 
 
 //======================================
-app.listen(PORT,()=>{
-    console.log('this app is listening on port 3000');
-})
 
+
+client.connect().then(()=>{
+    app.listen(PORT,()=>{
+    console.log('this app is listening on port 3000');
+    });
+}).catch(error=>{
+    console.log('an error occurred while connecting to database '+error);
+});
