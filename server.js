@@ -7,21 +7,18 @@ let superagent = require('superagent');
 
 let app= express();
 app.use(cors());
-const pg=require('pg');
-//// this line is to order to use it every where 
+const pg=require('pg'); 
 require('dotenv').config();
 
-const client= new pg.Client(process.env.DATABASE_URL);
+const client = new pg.Client({ connectionString: process.env.DATABASE_URL,   ssl: { rejectUnauthorized: false } });
 
 const PORT =process.env.PORT;
 
-// routes -endpoints
+// ==================routes -endpoints========================
 app.get('/location',handleLocation);
 app.get('/weather',handleWeather);
 app.get('/parks',handlePark);
 app.get('*',handle404);
-
-// creat a call back function in order to be lent
 
 
 //=======================Handler404==============================
@@ -37,13 +34,7 @@ function handle404(req,res){
 function handleLocation(req,res){
 
     let searchQuery= req.query.city;
-    // console.log(searchQuery);
-    // I'm passing here the searchQuery to send the requst to the get location then in order to git the data we will make the response 
-    // the new formula that taking the data as a parameter there is no need to make a variable and setting it into it.
     checkDataBase(searchQuery, res);
-    // getLocationData(searchQuery,res).then(data=>{
-    //     res.status(200).send(data);
-    // });
 }
 
 // ========================get data ============================
@@ -90,6 +81,7 @@ function getLocationData(searchQuery,res){
 //==================Function check database==========
 
 function checkDataBase(searchQuery,res){
+    // re-code on rowsCount base ...... 
     client.query(`SELECT * FROM cities WHERE cityName='${searchQuery}'`).then(data=>{
         if (data.rows.length==0){
             getLocationData(searchQuery,res).then(data=>{
@@ -97,6 +89,7 @@ function checkDataBase(searchQuery,res){
             });
         }else {
             console.log(data.rows);
+            // in order to be lent creat var = data.rows[0]; in order to make it as a object to pass in the constructor
             let resObject= new CityLocation(data.rows[0].cityname,data.rows[0].formatname,data.rows[0].lat,data.rows[0].lon);
             console.log('else ',resObject);
             res.status(200).send(resObject);
@@ -106,7 +99,8 @@ function checkDataBase(searchQuery,res){
 }
 
 //=================Constructor========================
-// constructor to order the data 
+// we should re-name the table columns too the properties of the constructor 
+//to base only the object it-self to the constructor then obj.property 
 
 function CityLocation(searchQuery,displayName,lat,lon){
     this.search_query=searchQuery;
@@ -199,7 +193,6 @@ function Weather(forcast,time){
 //==============================================================Park=================================================
 
 
-
 //==================Habdler=================
 
 function handlePark(req, res){
@@ -208,7 +201,6 @@ function handlePark(req, res){
     });
   
 }
-
 
 
 //=================Get Data================
@@ -262,9 +254,6 @@ function Parks(name,address,fee,description,url){
 }
 
 
-
-
-
 //======================================
 
 
@@ -275,3 +264,6 @@ client.connect().then(()=>{
 }).catch(error=>{
     console.log('an error occurred while connecting to database '+error);
 });
+
+// re-factor all the error from all function 
+//
