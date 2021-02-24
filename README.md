@@ -111,3 +111,33 @@ Start time: 2:45
 Finish time: 3:15
 
 Actual time needed to complete: 30min 
+
+<!-- =====================lab08========================= -->
+
+<!-- it toook alot of time with me I don't knoe how much -->
+
+
+
+<!-- =============================lab09===================================== -->
+
+Number and name of feature: movie 
+
+Estimate of time needed to complete: 30min
+
+Start time: 2:30
+
+Finish time: 3:15
+
+Actual time needed to complete: 45min 
+
+<!-- =================================== -->
+
+Number and name of feature: yelp and pagnation
+
+Estimate of time needed to complete: 30min
+
+Start time: 4:15
+
+Finish time: 4:45
+
+Actual time needed to complete: 30min 
